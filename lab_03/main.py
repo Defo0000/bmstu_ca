@@ -13,12 +13,12 @@ def newton_interpolation(table, x, polynom_degree):
     start_pos = find_range(table, x, polynom_degree)
 
     for i in range(start_pos, start_pos + polynom_degree):
-        diffs[i][0] = (table[i][1] - table[i + 1][1]) / (table[i][0] - table[i + 1][0])
+        diffs[i - start_pos][0] = (table[i][1] - table[i + 1][1]) / (table[i][0] - table[i + 1][0])
 
     for col in range(1, polynom_degree):
         for row in range(0, polynom_degree - col):
             diffs[row][col] = (diffs[row][col - 1] - diffs[row + 1][col - 1]) \
-                              / (table[row][0] - table[row + col + 1][0])
+                              / (table[start_pos + row][0] - table[start_pos + row + col + 1][0])
 
     res = table[start_pos][1]
     temp = (x - table[start_pos][0])
@@ -68,6 +68,7 @@ print_table(table)
 x1 = 0.5 # Значение аргумента х в 1-ом интервале для проведения интерполяции
 x2 = 5.5 # Значение аргумента х в 6-ом интервале для проведения интерполяции
 
-newton_interpolation(table, x1, 3)
+print(newton_interpolation(table, x1, 3))
+print(newton_interpolation(table, x2, 3))
 
 
