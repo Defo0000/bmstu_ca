@@ -59,8 +59,46 @@ def get_the_nearest_dot(table, x):
     else:
         return i, "right"
 
+
 def spline_interpolation(table, x):
-    pass
+    pos, side = get_the_nearest_dot(table, x)
+
+    if side == "right":
+        left_pos = pos - 1
+        right_pos = pos
+    else:
+        left_pos = pos
+        right_pos = pos + 1
+
+    a = table[left_pos][1]
+
+    c = [0 for i in range(len(table))]
+    ksi = [0 for i in range(len(table))]
+    etta = [0 for i in range(len(table))]
+
+    # h = 1 для всех i
+
+    for i in range(2, len(table)):
+        f = 3 * (table[i][1] - 2 * table[i - 1][1] + table[i - 2][1])
+
+        ksi[i] = -1 / (ksi[i - 1] + 4)
+
+        etta[i] = (f - etta[i - 1]) / (ksi[i - 1] + 4)
+
+    c[len(table) - 2] = etta[len(table) - 1]
+
+    for i in range(len(table) - 3, 0, -1):
+        c[i] = ksi[i + 1] * c[i + 1] + etta[i + 1]
+
+    i = right_pos
+
+    b = table[i][1] - table[i - 1][1] - (c[i + 1] - 2 * c[i]) / 3
+
+    d = (c[i + 1] - c[i]) / 3
+
+    c = c[i]
+
+    return a + b * (x - table[left_pos][0]) + c * (x - table[left_pos][0]) ** 2 + d * (x - table[left_pos][0]) ** 3
 
 table = make_table_of_squares(10, 1)
 print_table(table)
@@ -70,5 +108,7 @@ x2 = 5.5 # Значение аргумента х в 6-ом интервале �
 
 print(newton_interpolation(table, x1, 3))
 print(newton_interpolation(table, x2, 3))
+print(spline_interpolation(table, x1))
+print(spline_interpolation(table, x2))
 
 
