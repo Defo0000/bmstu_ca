@@ -64,33 +64,29 @@ def spline_interpolation(table, x):
     pos, side = get_the_nearest_dot(table, x)
 
     if side == "right":
-        left_pos = pos - 1
-        right_pos = pos
+        i = pos
     else:
-        left_pos = pos
-        right_pos = pos + 1
+        i = pos + 1
 
-    a = table[left_pos][1]
+    a = table[i - 1][1]
 
-    c = [0 for i in range(len(table))]
-    ksi = [0 for i in range(len(table))]
-    etta = [0 for i in range(len(table))]
+    c = [0 for k in range(len(table) + 1)]
+    ksi = [0 for k in range(len(table))]
+    etta = [0 for k in range(len(table))]
 
     # h = 1 для всех i
 
-    for i in range(2, len(table)):
-        f = 3 * (table[i][1] - 2 * table[i - 1][1] + table[i - 2][1])
+    for k in range(2, len(table)):
+        f = 3 * (table[k][1] - 2 * table[k - 1][1] + table[k - 2][1])
 
-        ksi[i] = -1 / (ksi[i - 1] + 4)
+        ksi[k] = -1 / (ksi[k - 1] + 4)
 
-        etta[i] = (f - etta[i - 1]) / (ksi[i - 1] + 4)
+        etta[k] = (f - etta[k - 1]) / (ksi[k - 1] + 4)
 
     c[len(table) - 2] = etta[len(table) - 1]
 
-    for i in range(len(table) - 3, 0, -1):
-        c[i] = ksi[i + 1] * c[i + 1] + etta[i + 1]
-
-    i = right_pos
+    for k in range(len(table) - 3, 0, -1):
+        c[k] = ksi[k + 1] * c[k + 1] + etta[k + 1]
 
     b = table[i][1] - table[i - 1][1] - (c[i + 1] - 2 * c[i]) / 3
 
@@ -98,7 +94,7 @@ def spline_interpolation(table, x):
 
     c = c[i]
 
-    return a + b * (x - table[left_pos][0]) + c * (x - table[left_pos][0]) ** 2 + d * (x - table[left_pos][0]) ** 3
+    return a + b * (x - table[i - 1][0]) + c * (x - table[i - 1][0]) ** 2 + d * (x - table[i - 1][0]) ** 3
 
 table = make_table_of_squares(10, 1)
 print_table(table)
@@ -106,9 +102,16 @@ print_table(table)
 x1 = 0.5 # Значение аргумента х в 1-ом интервале для проведения интерполяции
 x2 = 5.5 # Значение аргумента х в 6-ом интервале для проведения интерполяции
 
-print(newton_interpolation(table, x1, 3))
-print(newton_interpolation(table, x2, 3))
-print(spline_interpolation(table, x1))
-print(spline_interpolation(table, x2))
+print("Newton interpolation:")
+print("X = ", x1, ": F(x) ~= ", "%.2f" % newton_interpolation(table, x1, 3), sep="")
+print("X = ", x2, ": F(x) ~= ", "%.2f" % newton_interpolation(table, x2, 3), sep="")
+print()
+print("Spline interpolation:")
+print("X =", x1, ": F(x) ~= ", "%.2f" % spline_interpolation(table, x1), sep="")
+print("X =", x2, ": F(x) ~= ", "%.2f" % spline_interpolation(table, x2), sep="")
+print()
+print("True values:")
+print("X =", x1, ": F(x) = ", "%.2f" % (x1 * x1), sep="")
+print("X =", x2, ": F(x) = ", "%.2f" % (x2 * x2), sep="")
 
 
