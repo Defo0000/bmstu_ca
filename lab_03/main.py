@@ -71,21 +71,21 @@ def spline_interpolation(table, x):
     a = table[i - 1][1]
 
     c = [0 for k in range(len(table) + 1)]
-    ksi = [0 for k in range(len(table))]
-    etta = [0 for k in range(len(table))]
+    ksi = [0 for k in range(len(table) + 1)]
+    etta = [0 for k in range(len(table) + 1)]
 
     # h = 1 для всех i
 
     for k in range(2, len(table)):
         f = 3 * (table[k][1] - 2 * table[k - 1][1] + table[k - 2][1])
 
-        ksi[k] = -1 / (ksi[k - 1] + 4)
+        ksi[k + 1] = -1 / (ksi[k] + 4)
 
-        etta[k] = (f - etta[k - 1]) / (ksi[k - 1] + 4)
+        etta[k + 1] = (f - etta[k]) / (ksi[k] + 4)
 
-    c[len(table) - 2] = etta[len(table) - 1]
+    c[len(table) - 1] = etta[len(table)]
 
-    for k in range(len(table) - 3, 0, -1):
+    for k in range(len(table) - 2, 1, -1):
         c[k] = ksi[k + 1] * c[k + 1] + etta[k + 1]
 
     b = table[i][1] - table[i - 1][1] - (c[i + 1] - 2 * c[i]) / 3
@@ -107,11 +107,11 @@ print("X = ", x1, ": F(x) ~= ", "%.2f" % newton_interpolation(table, x1, 3), sep
 print("X = ", x2, ": F(x) ~= ", "%.2f" % newton_interpolation(table, x2, 3), sep="")
 print()
 print("Spline interpolation:")
-print("X =", x1, ": F(x) ~= ", "%.2f" % spline_interpolation(table, x1), sep="")
-print("X =", x2, ": F(x) ~= ", "%.2f" % spline_interpolation(table, x2), sep="")
+print("X = ", x1, ": F(x) ~= ", "%.2f" % spline_interpolation(table, x1), sep="")
+print("X = ", x2, ": F(x) ~= ", "%.2f" % spline_interpolation(table, x2), sep="")
 print()
 print("True values:")
-print("X =", x1, ": F(x) = ", "%.2f" % (x1 * x1), sep="")
-print("X =", x2, ": F(x) = ", "%.2f" % (x2 * x2), sep="")
+print("X = ", x1, ": F(x) = ", "%.2f" % (x1 * x1), sep="")
+print("X = ", x2, ": F(x) = ", "%.2f" % (x2 * x2), sep="")
 
 
