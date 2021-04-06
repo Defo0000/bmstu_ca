@@ -85,7 +85,7 @@ def spline_interpolation(table, x):
 
     c[len(table) - 1] = etta[len(table)]
 
-    for k in range(len(table) - 2, 1, -1):
+    for k in range(len(table) - 2, 0, -1):
         c[k] = ksi[k + 1] * c[k + 1] + etta[k + 1]
 
     b = table[i][1] - table[i - 1][1] - (c[i + 1] - 2 * c[i]) / 3
