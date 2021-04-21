@@ -1,4 +1,6 @@
 from random import *
+import matplotlib.pyplot as plt
+from rms import *
 
 def get_n():
     n = input()
@@ -10,7 +12,6 @@ def get_n():
     except:
         print("Ошибка: количество должно выражаться целым числом.")
         return -1
-    print("Количество узлов введено.")
     return n
 
 
@@ -70,21 +71,30 @@ def edit_weight(p, n):
     return p
 
 
+def edit_degree():
+    print("Введите новую степень полинома: ", end="")
+    n = get_n()
+    while n == -1:
+        print("Введите новую степень полинома: ", end="")
+        n = get_n()
+    return n
+
 def get_action():
     print("\nДоступные действия:")
     print("1) Сгенерировать таблицу (х, у)")
     print("2) Сгенерировать веса")
     print("3) Задать веса для точек вручную")
     print("4) Изменить значение веса заданной точки")
-    print("5) Найти решение")
-    print("6) Вывести результат на экран в виде графика")
-    print("7) Вывести таблицу на экран")
-    print("8) Завершить программу")
+    print("5) Изменить степень полинома")
+    print("6) Найти решение")
+    print("7) Вывести результат на экран в виде графика")
+    print("8) Вывести таблицу на экран")
+    print("9) Завершить программу")
     n = input("\nВаш выбор: ")
     try:
         n = int(n)
-        if n < 1 or n > 8:
-            print("Ошибка ввода команды: должна быть введена цифра от 1 до 7 включительно.")
+        if n < 1 or n > 9:
+            print("Ошибка ввода команды: должна быть введена цифра от 1 до 9 включительно.")
             return -1
     except:
         print("Ошибка: количество должно выражаться целым числом.")
@@ -116,3 +126,28 @@ def print_table(x, y, p):
         print("┣━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━┫")
         print("┃", "%9d" % (i + 1), "┃", "%9.2f" % x[i], "┃", "%9.2f" % y[i], "┃", "%9.2f" % p[i], "┃")
     print("┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛")
+
+
+def get_polynom_value(coeffs, x):
+
+    res = coeffs[0]
+    mul = x
+
+    for i in range(1, len(coeffs)):
+        res += mul * coeffs[i]
+        mul *= x
+
+    return res
+
+def draw_data(coeffs, x, y, degree, name_func):
+
+    plt.title("Аппроксимация для функции " + name_func)
+
+    apr_func = []
+    for i in range(len(x)):
+        apr_func.append(get_polynom_value(coeffs, x[i]))
+
+    plt.scatter(x, y)
+    plt.plot(x, apr_func)
+
+    plt.show()
